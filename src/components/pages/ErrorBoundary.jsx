@@ -9,7 +9,7 @@
 import { Component } from "react"
 
 import { INFO_MESSAGES } from "../../assets/constants/Messages"
-// import { FallbackIcon } from "@/src/assets/constants/Constant"
+import { FallbackIcon } from "../../assets/constants/Constant"
 
 const style = {
     mainWrapper: {
@@ -66,7 +66,7 @@ class ErrorBoundary extends Component {
             // You can render any custom fallback UI
             return (
                 <div style={style.mainWrapper}>
-                    {/* <img src={FallbackIcon} alt="" style={style.image} /> */}
+                    <img src={FallbackIcon} alt="" style={style.image} />
 
                     <div style={style.mainText}>
                         <span> {INFO_MESSAGES.FALLBACK.MAIN_TEXT} </span>
