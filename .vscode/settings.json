@@ -1,5 +1,4 @@
 {
-    "conventionalCommits.scopes": [
-        "errorBoundary"
-    ]
+    "conventionalCommits.scopes": ["errorBoundary"],
+    "cSpell.ignoreWords": ["Nextgen", "OPENXCELL", "Xcell", "speecherror"]
 }
