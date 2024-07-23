@@ -13,7 +13,7 @@ npm install
 Run App:
 
 ```bash
-npm start
+npm run dev
 ```
 
 ## Deployment
@@ -47,7 +47,7 @@ npm run build
 | :--------------- | :-------------------------------- |
 | `Brijesh Darji`  | `brijesh.darji@openxcellinc.com`  |
 | `Bhargav Gajjar` | `bhargav.gajjar@openxcellinc.com` |
-| `Krusha Patel`   | `krusha@openxcelltechnolabs.com`  |
+| `Krusha Patel`   | `krusha.patel@openxcell.com`  |
 
 ## Support
 
