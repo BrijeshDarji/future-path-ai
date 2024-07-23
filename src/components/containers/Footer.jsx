@@ -31,7 +31,7 @@ function Footer() {
 
     return (
         <FooterWrapper>
-            Made with <img src={RedHeart} alt="RedHeart" width={'15px'} /> by <i><strong>Nextgen Navigators</strong></i>
+            Made with <img src={RedHeart} alt="RedHeart" width={'15px'} /> by <i><strong>NextGen Navigators</strong></i>
         </FooterWrapper>
     )
 }
