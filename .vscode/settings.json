@@ -1,5 +1,16 @@
 {
     "conventionalCommits.scopes": [
-        "errorBoundary"
+        "errorBoundary",
+        "footer",
+        "readme"
+    ],
+    "cSpell.ignoreWords": [
+        "NextGen",
+        "OPENXCELL",
+        "Xcell",
+        "speecherror"
+    ],
+    "cSpell.words": [
+        "Hackathon"
     ]
 }
