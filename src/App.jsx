@@ -1,5 +1,3 @@
-import "./App.css"
-
 import ErrorBoundary from "./components/pages/ErrorBoundary.jsx"
 import Routing from "./routes/Routing.jsx"
 

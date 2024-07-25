@@ -1,6 +1,7 @@
 import { memo } from "react"
-import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
 import { URL_OPENXCELL } from "../../assets/constants/SitePath";
 import { OpenXcell } from './../../assets/constants/Constant'
 
@@ -20,14 +21,15 @@ const HeaderWrapper = styled.header`
     font-size: 14px;
     line-height: 14px;
     z-index: 999;
+
     .logo {
         font-size: 24px;
         font-weight: 900;
         line-height: 30px;
         background: -webkit-linear-gradient(
-          225deg,
-          rgb(255 201 39),
-          rgb(255 255 255)
+            225deg,
+            rgb(255 201 39),
+            rgb(255 255 255)
         );
         background-clip: text;
         -webkit-background-clip: text;
@@ -35,14 +37,17 @@ const HeaderWrapper = styled.header`
         text-transform: capitalize;
         cursor: pointer;
     }
+
     .powered-by{
         display: flex;
         align-items: flex-end;
         gap: 10px;
+
         span{
             font-size: 12px;
             margin-bottom: 3px;
         }
+
         img{
             cursor: pointer;
         }
@@ -53,9 +58,21 @@ function Header() {
     const navigate = useNavigate();
     return (
         <HeaderWrapper>
-            <div className="logo" onClick={() => navigate('/')}>Future Path AI</div>
-            <div className="powered-by"><span>Powered By</span>
-                <img src={OpenXcell} alt="OpenXcell" width={'100px'} onClick={() => window.open(URL_OPENXCELL)} />
+            <div
+                className="logo"
+                onClick={() => navigate('/')}
+            >
+                Future Path AI
+            </div>
+
+            <div className="powered-by">
+                <span>Powered By</span>
+                <img
+                    src={OpenXcell}
+                    alt="OpenXcell"
+                    width={'100px'}
+                    onClick={() => window.open(URL_OPENXCELL)}
+                />
             </div>
         </HeaderWrapper>
     )
