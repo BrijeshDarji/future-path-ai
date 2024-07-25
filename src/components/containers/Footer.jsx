@@ -18,20 +18,28 @@ const FooterWrapper = styled.footer`
     background-size: 4px 4px;
     backdrop-filter: blur(6px);
     z-index: 999;
+
     img{
         margin: 0 7px;
         animation: pulse 1s infinite;
     }
+
     strong{
         margin-left: 5px;
     }
 `
 
 function Footer() {
-
     return (
         <FooterWrapper>
-            Made with <img src={RedHeart} alt="RedHeart" width={'15px'} /> by <i><strong>NextGen Navigators</strong></i>
+            Made with
+            <img
+                src={RedHeart}
+                alt="RedHeart"
+                width={'15px'}
+            />
+            by
+            <i><strong>NextGen Navigators</strong></i>
         </FooterWrapper>
     )
 }

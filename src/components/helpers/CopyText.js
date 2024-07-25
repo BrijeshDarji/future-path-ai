@@ -7,14 +7,17 @@ export const CopyText = (text) => {
                 console.error("Failed to copy text to clipboard: ", err);
             }
         );
-    } else {
+    }
+    else {
         // Fallback for browsers that do not support the Clipboard API
         const textArea = document.createElement("textarea");
         textArea.value = text;
         textArea.style.position = "fixed"; // Avoid scrolling to bottom
         document.body.appendChild(textArea);
+
         textArea.focus();
         textArea.select();
+
         try {
             document.execCommand("copy");
         } catch (err) {

@@ -1,59 +1,69 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import SplitText from "./SplitText";
 import styled from "styled-components";
+
+import SplitText from "./SplitText";
+
 import { Logo } from "../../assets/constants/Constant";
 
 const SliderWrapper = styled.div`
-  .slider {
+.slider {
     position: relative;
+
     .image-wrapper {
-      width: 510px;
-      height: 467px;
-      border-radius: 35px;
-      overflow: hidden;
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-      @media (max-width: 1024px) {
-        width: 370px;
-        height: 267px;
-      }
-      @media (max-width: 768px) {
-        width: 100%;
-      }
+        width: 510px;
+        height: 467px;
+        border-radius: 35px;
+        overflow: hidden;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 1024px) {
+            width: 370px;
+            height: 267px;
+        }
+
+        @media (max-width: 768px) {
+            width: 100%;
+        }
     }
+
     .slider-text {
-      position: absolute;
-      margin-top: -55px;
-      right: 20px;
-      background-color: var(--matt-dark);
-      padding: 15px;
-      border-radius: 10px;
-      font-size: 14px;
-      line-height: normal;
-      max-width: 330px;
-      width: 100%;
-      height: auto;
-      box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-      .d-flex {
-        display: flex;
-        height: 100%;
-        align-items: flex-start;
-      }
-      .prompt-icon {
-        margin-right: 15px;
-      }
-      @media (max-width: 768px) {
-        right: 0;
-        left: 0;
-        margin: -50px auto 0 auto;
-        width: calc(100% - 10px);
-      }
+        position: absolute;
+        margin-top: -55px;
+        right: 20px;
+        background-color: var(--matt-dark);
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 14px;
+        line-height: normal;
+        max-width: 330px;
+        width: 100%;
+        height: auto;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+        .d-flex {
+            display: flex;
+            height: 100%;
+            align-items: flex-start;
+        }
+
+        .prompt-icon {
+            margin-right: 15px;
+        }
+
+        @media (max-width: 768px) {
+            right: 0;
+            left: 0;
+            margin: -50px auto 0 auto;
+            width: calc(100% - 10px);
+        }
     }
-  }
+}
 `;
 
 const SliderLanding = () => {
@@ -93,55 +103,61 @@ const SliderLanding = () => {
 			<AnimatePresence>
 				<div className="slider">
 					{contentArray.map((item, index) =>
-						index === currentIndex ? (
-							<motion.div key={item.id}>
-								<motion.div
-									initial={{ opacity: 0, y: 50 }}
-									animate={{ opacity: 1, y: 0 }}
-									exit={{ opacity: 0 }}
-									transition={{ duration: 0.5 }}
-									className="image-wrapper"
-								>
-									<img src={item.image} alt="image-slider" />
-								</motion.div>
-								<motion.div
-									initial={{ y: 50 }}
-									animate={{ y: 0 }}
-									exit={{ opacity: 0 }}
-									transition={{ duration: 0.5 }}
-									className="slider-text"
-								>
-									<div className="d-flex">
-										<motion.img
-											initial={{ opacity: 0, scale: 0.5 }}
-											animate={{ opacity: 1, scale: 1 }}
-											exit={{ opacity: 0 }}
-											transition={{ duration: 0.5 }}
-											src={item.prompt_icon}
-											alt="prompt_icon"
-											width={item.prompt_type === "user" ? "45px" : "25px"}
-											className="prompt-icon"
+						index === currentIndex
+							? (
+								<motion.div key={item.id}>
+									<motion.div
+										initial={{ opacity: 0, y: 50 }}
+										animate={{ opacity: 1, y: 0 }}
+										exit={{ opacity: 0 }}
+										transition={{ duration: 0.5 }}
+										className="image-wrapper"
+									>
+										<img
+											src={item.image}
+											alt="image-slider"
 										/>
-										<div>
-											<SplitText
-												initial={{ opacity: 0 }}
-												animate="visible"
-												variants={{
-													visible: (i) => ({
-														opacity: 1,
-														transition: {
-															delay: i * 0.1,
-														},
-													}),
-												}}
-											>
-												{item.text}
-											</SplitText>
+									</motion.div>
+
+									<motion.div
+										initial={{ y: 50 }}
+										animate={{ y: 0 }}
+										exit={{ opacity: 0 }}
+										transition={{ duration: 0.5 }}
+										className="slider-text"
+									>
+										<div className="d-flex">
+											<motion.img
+												initial={{ opacity: 0, scale: 0.5 }}
+												animate={{ opacity: 1, scale: 1 }}
+												exit={{ opacity: 0 }}
+												transition={{ duration: 0.5 }}
+												src={item.prompt_icon}
+												alt="prompt_icon"
+												width={item.prompt_type === "user" ? "45px" : "25px"}
+												className="prompt-icon"
+											/>
+
+											<div>
+												<SplitText
+													initial={{ opacity: 0 }}
+													animate="visible"
+													variants={{
+														visible: (i) => ({
+															opacity: 1,
+															transition: {
+																delay: i * 0.1,
+															},
+														}),
+													}}
+												>
+													{item.text}
+												</SplitText>
+											</div>
 										</div>
-									</div>
+									</motion.div>
 								</motion.div>
-							</motion.div>
-						) : null
+							) : null
 					)}
 				</div>
 			</AnimatePresence>

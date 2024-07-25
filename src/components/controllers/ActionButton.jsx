@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from 'styled-components';
+
+import Toast from "../helpers/Toast";
 import { CopyText } from "../helpers/CopyText";
 
 import {
@@ -8,8 +10,6 @@ import {
     MuteIcon,
 } from "../../assets/constants/Constant";
 
-import Toast from "../helpers/Toast";
-
 const ActionWrapper = styled.div`
     width: 100%;
     display: flex;
@@ -17,6 +17,7 @@ const ActionWrapper = styled.div`
     gap: 10px;
     align-items: center;
     height: 33px;
+
     img {
         width: 20px;
         vertical-align: sub;
@@ -56,30 +57,30 @@ function ActionButton({ text }) {
         if (isPlaying) {
             stopSpeech();
             setIsPlaying(false);
-        } else {
+        }
+        else {
             const newUtterance = new SpeechSynthesisUtterance(text);
 
             // Set the voice if available
             const voices = speechSynthesis.getVoices();
             const usEnglishVoice = voices.find(voice => voice.name === 'Google US English');
+
             if (usEnglishVoice) {
                 newUtterance.voice = usEnglishVoice;
             }
-
             setUtterance(newUtterance);
 
             newUtterance.onend = () => {
                 setIsPlaying(false);
             };
+
             newUtterance.onerror = () => {
                 setIsPlaying(false);
             };
-
             speechSynthesis.speak(newUtterance);
             setIsPlaying(true);
         }
     };
-
 
     return (
         <ActionWrapper>
@@ -89,13 +90,30 @@ function ActionButton({ text }) {
                 title="Copy text"
                 onClick={() => (CopyText(text), setShowToast(true))}
             />
+
             <div onClick={handleSpeakClick}>
-                {!isPlaying ?
-                    <img src={SpeakIcon} alt="SpeakIcon" title='Listen' /> :
-                    <img src={MuteIcon} alt="MuteIcon" title='Stop listening' />
+                {!isPlaying
+                    ? (
+                        <img
+                            src={SpeakIcon}
+                            alt="SpeakIcon"
+                            title='Listen'
+                        />
+                    )
+                    : (
+                        <img
+                            src={MuteIcon}
+                            alt="MuteIcon"
+                            title='Stop listening'
+                        />
+                    )
                 }
             </div>
-            <Toast text={"Copied!"} isVisible={showToast} />
+
+            <Toast
+                text={"Copied!"}
+                isVisible={showToast}
+            />
         </ActionWrapper>
     );
 }

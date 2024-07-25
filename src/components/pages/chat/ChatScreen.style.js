@@ -3,6 +3,7 @@ import styled from "styled-components";
 const ChatScreenWrapper = styled.div`
     width: 100%;
     color: var(--white);
+
     .max-outlet {
         max-width: 1200px;
         width: 100%;
@@ -44,6 +45,7 @@ const ChatScreenWrapper = styled.div`
                         color: var(--sub-text-dark);
                     }
                 }
+
                 .send-wrapper {
                     display: flex;
                     justify-content: center;
@@ -64,10 +66,12 @@ const ChatScreenWrapper = styled.div`
             padding: 0 20px;
         }
     }
+
     .welcome-prompt {
         width: 100%;
         height: 100%;
         padding-top: 200px;
+
         .title {
             font-size: 38px;
             font-weight: 600;
@@ -81,15 +85,18 @@ const ChatScreenWrapper = styled.div`
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .content {
             margin-top: 10px;
             color: var(--sub-text-dark);
         }
+
         .cards-container {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 20px;
+
             .card {
                 border: 1px solid var(--matt-dark);
                 padding: 20px;
@@ -100,15 +107,18 @@ const ChatScreenWrapper = styled.div`
                 height: 170px;
                 cursor: pointer;
                 transition: 0.2s ease-in-out;
+
                 &:hover {
                     background: var(--matt-dark);
                     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
                 }
+
                 .card-txt {
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
                     height: 100%;
+
                     img {
                         margin-top: auto;
                         width: 25px;
@@ -118,6 +128,7 @@ const ChatScreenWrapper = styled.div`
             }
         }
     }
+
     .chat-prompt {
         padding: 90px 0 100px 0;
         height: 100%;
@@ -126,21 +137,25 @@ const ChatScreenWrapper = styled.div`
         flex-direction: column;
         gap: 25px;
         .user-response,
+
         .ai-response {
             padding: 10px 15px;
             display: inline;
             width: fit-content;
         }
+
         .user-response {
             border-radius: 15px 15px 0 15px;
             margin-left: auto;
             max-width: 400px;
             background: var(--matt-dark);
         }
+
         .ai-response {
             border-radius: 15px 15px 15px 0px;
             margin-right: auto;
             max-width: 600px;
+
             .ai-container {
                 display: flex;
                 flex-direction: row;
