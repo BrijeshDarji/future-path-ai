@@ -169,7 +169,7 @@ function ChatScreen() {
                             type="text"
                             name="chat"
                             id="chat"
-                            placeholder="Message to Future Path AI"
+                            placeholder="Message FuturePath AI"
                         />
 
                         <div className="send-wrapper">

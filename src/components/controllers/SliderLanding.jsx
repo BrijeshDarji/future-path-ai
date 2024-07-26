@@ -66,27 +66,29 @@ const SliderWrapper = styled.div`
 }
 `;
 
+const timePerSlide = 5 * 1000;
+
+const contentArray = [
+	{
+		id: 0,
+		text: "Which career path is right for me based on my academic result?",
+		image:
+			"https://cdn.dribbble.com/userupload/3566470/file/original-28fcb0756f184d9e12cb0fddfd8ecdd5.png?resize=752x",
+		prompt_icon:
+			"https://www.gstatic.com/lamda/images/landing/a/i18n/en/ma4_aGFj00iXnaxSvfE0mItTt.png",
+		prompt_type: "user",
+	},
+	{
+		id: 1,
+		text: "Given your strong math skills, you can consider careers in data science, actuarial science, financial analysis, engineering.",
+		image:
+			"https://cdn.dribbble.com/users/2092964/screenshots/15599853/media/a7eb7c74ab820c8b5f57da3a66fc86df.png",
+		prompt_icon: Logo,
+		prompt_type: "machine",
+	},
+];
+
 const SliderLanding = () => {
-	const contentArray = [
-		{
-			id: 0,
-			text: "Which career path is right for me based on my academic result?",
-			image:
-				"https://cdn.dribbble.com/userupload/3566470/file/original-28fcb0756f184d9e12cb0fddfd8ecdd5.png?resize=752x",
-			prompt_icon:
-				"https://www.gstatic.com/lamda/images/landing/a/i18n/en/ma4_aGFj00iXnaxSvfE0mItTt.png",
-			prompt_type: "user",
-		},
-		{
-			id: 1,
-			text: "Given your strong math skills, you can consider careers in data science, actuarial science, financial analysis, engineering.",
-			image:
-				"https://cdn.dribbble.com/users/2092964/screenshots/15599853/media/a7eb7c74ab820c8b5f57da3a66fc86df.png",
-			prompt_icon: Logo,
-			prompt_type: "machine",
-		},
-	];
-	const timePerSlide = 7 * 1000;
 	const [currentIndex, setCurrentIndex] = useState(0);
 
 	useEffect(() => {
@@ -96,7 +98,7 @@ const SliderLanding = () => {
 
 		// Cleanup interval on component unmount
 		return () => clearInterval(interval);
-	}, [contentArray.length]);
+	}, []);
 
 	return (
 		<SliderWrapper>
