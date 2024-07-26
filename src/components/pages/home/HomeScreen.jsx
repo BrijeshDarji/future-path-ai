@@ -36,7 +36,7 @@ function HomeScreen() {
 				>
 					<div className="logo-container">
 						<img src={Logo} alt="logo" width={"40px"} />
-						<div className="logo-text">Future-Path AI</div>
+						<div className="logo-text">FuturePath AI</div>
 					</div>
 					<FormButton
 						text={"Let's get started!"}
