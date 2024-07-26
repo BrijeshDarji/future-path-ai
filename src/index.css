@@ -41,6 +41,11 @@ input[type="text"] {
     font-weight: 400;
 }
 
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 @keyframes glowing {
     0% {
         background-position: 0 0;

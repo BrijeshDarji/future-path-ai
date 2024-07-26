@@ -41,15 +41,22 @@ const HeaderWrapper = styled.header`
     .powered-by{
         display: flex;
         align-items: flex-end;
-        gap: 10px;
+        gap: 5px;
 
-        span{
+        span {
             font-size: 12px;
-            margin-bottom: 3px;
+
+            @media (max-width: 576px) {
+                font-size: 10px;
+            }
         }
 
-        img{
+        img {
             cursor: pointer;
+
+            @media (max-width: 576px) {
+                width: 70px;
+            }
         }
     }
 `
@@ -62,7 +69,7 @@ function Header() {
                 className="logo"
                 onClick={() => navigate('/')}
             >
-                Future Path AI
+                FuturePath AI
             </div>
 
             <div className="powered-by">

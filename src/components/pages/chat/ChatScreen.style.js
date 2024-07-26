@@ -64,6 +64,20 @@ const ChatScreenWrapper = styled.div`
 
         @media (max-width: 768px) {
             padding: 0 20px;
+
+            .chat-input {
+                .position-relative {
+                    width: 90%;
+                }
+            }
+        }
+
+        @media (max-width: 576px) {
+            .chat-input {
+                .position-relative {
+                    width: 90%;
+                }
+            }
         }
     }
 
@@ -71,6 +85,10 @@ const ChatScreenWrapper = styled.div`
         width: 100%;
         height: 100%;
         padding-top: 200px;
+
+        @media (max-width: 576px) {
+            padding: 130px 0 115px 0;
+        }
 
         .title {
             font-size: 38px;
@@ -84,6 +102,14 @@ const ChatScreenWrapper = styled.div`
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+
+            @media (max-width: 768px) {
+                font-size: 28px;
+            }
+
+            @media (max-width: 576px) {
+                font-size: 24px;
+            }
         }
 
         .content {
@@ -108,6 +134,10 @@ const ChatScreenWrapper = styled.div`
                 cursor: pointer;
                 transition: 0.2s ease-in-out;
 
+                @media (max-width: 576px) {
+                    height: 120px;
+                }
+
                 &:hover {
                     background: var(--matt-dark);
                     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -125,6 +155,18 @@ const ChatScreenWrapper = styled.div`
                         height: 20px;
                     }
                 }
+
+                @media (max-width: 1024px) {
+                    width: calc(100% / 3 - 10px);
+                }
+
+                @media (max-width: 768px) {
+                    width: calc(100% / 2 - 10px);
+                }
+
+                @media (max-width: 576px) {
+                    width: 100%;
+                }
             }
         }
     }
@@ -136,8 +178,8 @@ const ChatScreenWrapper = styled.div`
         display: flex;
         flex-direction: column;
         gap: 25px;
-        .user-response,
 
+        .user-response,
         .ai-response {
             padding: 10px 15px;
             display: inline;
@@ -149,6 +191,10 @@ const ChatScreenWrapper = styled.div`
             margin-left: auto;
             max-width: 400px;
             background: var(--matt-dark);
+
+            @media (max-width: 576px) {
+                max-width: 300px;
+            }
         }
 
         .ai-response {
