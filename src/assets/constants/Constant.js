@@ -3,6 +3,7 @@
  */
 
 const cdnLink = import.meta.env.VITE_CDN_LINK;
+export const apiBaseURL = import.meta.env.VITE_BASE_URL;
 
 // Miscellaneous images
 export const FallbackIcon = `${cdnLink}/images/fallback.avif`;

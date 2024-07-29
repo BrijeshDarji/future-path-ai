@@ -1,10 +1,7 @@
-import { memo, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
 
-import SplitText from "../../controllers/SplitText";
 import Loader from "../../controllers/Loader";
-import Suggestions from "../../controllers/Suggestions";
-import ActionButton from "../../controllers/ActionButton";
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import ChatScreenWrapper from "./ChatScreen.style";
@@ -18,59 +15,97 @@ import {
     SendIcon
 } from "../../../assets/constants/Constant";
 
+import axiosInstance from "../../helpers/AxiosConfig";
+import ChatResponse from "./ChatResponse";
+
+const commonPromptData = [
+    {
+        id: 0,
+        text: "Which career path is right for me based on my academic result?",
+        icon: AcademicIcon,
+    },
+    {
+        id: 1,
+        text: "As a recent graduate, what are five in-demand IT jobs I should consider?",
+        icon: ComputerIcon,
+    },
+    {
+        id: 2,
+        text: "I'm interested in preparing for competitive exams.",
+        icon: ExamIcon,
+    },
+    {
+        id: 3,
+        text: "Can you offer some guidance?, I just started my career.",
+        icon: CareerIcon,
+    },
+]
+
 function ChatScreen() {
-    const commonPromptData = [
-        {
-            id: 0,
-            text: "Which career path is right for me based on my academic result?",
-            icon: AcademicIcon,
-        },
-        {
-            id: 1,
-            text: "As a recent graduate, what are five in-demand IT jobs I should consider?",
-            icon: ComputerIcon,
-        },
-        {
-            id: 2,
-            text: "I'm interested in preparing for competitive exams.",
-            icon: ExamIcon,
-        },
-        {
-            id: 3,
-            text: "Can you offer some guidance?, I just started my career.",
-            icon: CareerIcon,
-        },
-    ]
 
     const [chatData, setChatData] = useState([]);
-    const [hideWelcomePrompt, setHideWelcomePrompt] = useState(true);
-    const [textAnimationComplete, setTextAnimationComplete] = useState(false);
+    const [message, setMessage] = useState('');
+    const [showWelcomePrompt, setShowWelcomePrompt] = useState(true);
     const [loading, setLoading] = useState(false);
+    const bottomRef = useRef(null);
 
-    const handleChatPrompt = (text, type) => {
-        const newChatData = [{ text, type: type }];
-        setChatData(newChatData);
-        setHideWelcomePrompt(false);
+    useEffect(() => {
+        // Scroll to the bottom whenever messages change
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [chatData]);
 
-        // just for demo - show loading then data
-        setTimeout(() => {
-            setLoading(true);
-        }, 500);
+    const handleSendMessage = (input) => {
+        const userInput = input || message
 
-        setTimeout(() => {
+        showWelcomePrompt && setShowWelcomePrompt(false);
+
+        if (userInput.trim()) {
             setChatData((prev) => [
                 ...prev,
-                { text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.", type: "machine" }
+                {
+                    text: userInput,
+                    type: "user"
+                }
             ]);
+            setLoading(true)
 
-            setLoading(false);
-        }, 3000);
-    }
+            axiosInstance.post(
+                "/api/chat-bot",
+                {
+                    "user_input": userInput
+                }
+            )
+                .then(response => {
+                    setChatData((prev) => [
+                        ...prev,
+                        {
+                            text: response.data.reply,
+                            type: "machine",
+                        }
+                    ]);
+                })
+                .catch(error => {
+                    console.log("🚀 ~ handleSendMessage ~ error:", error)
+                })
+                .finally(() => {
+                    setLoading(false)
+                })
+            setMessage(''); // Clear the input field after sending
+        }
+    };
+
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
 
     return (
         <ChatScreenWrapper>
             <div className="max-outlet">
-                {hideWelcomePrompt
+                {showWelcomePrompt
                     ? (
                         <motion.div
                             initial={{ y: 100 }}
@@ -96,7 +131,7 @@ function ChatScreen() {
                                         transition={{ delay: item.id * 0.1 }}
                                         className="card"
                                         key={item.id}
-                                        onClick={() => handleChatPrompt(item.text, "user")}
+                                        onClick={() => handleSendMessage(item.text)}
                                     >
                                         <div className="card-txt">
                                             {item.text}
@@ -128,28 +163,7 @@ function ChatScreen() {
                                                         />
 
                                                         <div>
-                                                            <SplitText
-                                                                initial={{ opacity: 0 }}
-                                                                animate="visible"
-                                                                onLastWordAnimationComplete={() => (setTextAnimationComplete(true))}
-                                                                variants={{
-                                                                    visible: (i) => ({
-                                                                        opacity: 1,
-                                                                        transition: {
-                                                                            delay: i * 0.05,
-                                                                        },
-                                                                    }),
-                                                                }}
-                                                            >
-                                                                {item.text}
-                                                            </SplitText>
-
-                                                            {textAnimationComplete && (
-                                                                <>
-                                                                    <Suggestions />
-                                                                    <ActionButton text={item.text} />
-                                                                </>
-                                                            )}
+                                                            <ChatResponse chat={item} />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -170,9 +184,15 @@ function ChatScreen() {
                             name="chat"
                             id="chat"
                             placeholder="Message FuturePath AI"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyPress={handleKeyPress}
                         />
 
-                        <div className="send-wrapper">
+                        <div
+                            className="send-wrapper"
+                            onClick={handleSendMessage}
+                        >
                             <img
                                 src={SendIcon}
                                 alt="send"
@@ -181,6 +201,8 @@ function ChatScreen() {
                         </div>
                     </div>
                 </div>
+
+                <div ref={bottomRef} />
             </div>
         </ChatScreenWrapper>
     )
