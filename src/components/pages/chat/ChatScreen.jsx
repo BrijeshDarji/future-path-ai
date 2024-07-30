@@ -109,7 +109,7 @@ function ChatScreen() {
                     const errorMessage = error.response?.data?.message || error.message
                     toast.error(errorMessage)
 
-                    setChatData((prev) => {
+                    /* setChatData((prev) => {
                         prev.forEach(data => {
                             if (data.showSuggestion) {
                                 data.showSuggestion = false
@@ -124,7 +124,7 @@ function ChatScreen() {
                                 showSuggestion: true
                             }
                         ]
-                    });
+                    }); */
                 })
                 .finally(() => {
                     setLoading(false)
