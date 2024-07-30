@@ -3,8 +3,13 @@ import { useState } from 'react';
 import SplitText from '../../controllers/SplitText'
 import Suggestions from "../../controllers/Suggestions.jsx"
 import ActionButton from "../../controllers/ActionButton.jsx"
+import PlacesResponse from './PlacesResponse.jsx';
 
-function ChatResponse({ chat }) {
+function ChatResponse({
+    chat,
+    handleDynamicSuggestion,
+    handlePreBuildSuggestion,
+}) {
     const [textAnimationComplete, setTextAnimationComplete] = useState(false);
 
     return (
@@ -25,14 +30,24 @@ function ChatResponse({ chat }) {
                 {chat.text}
             </SplitText>
 
-            {
-                textAnimationComplete && (
-                    <>
-                        <Suggestions />
-                        <ActionButton text={chat.text} />
-                    </>
-                )
-            }
+            {chat.placesData && (
+                <PlacesResponse
+                    places={chat.placesData}
+                />
+            )}
+
+            {textAnimationComplete && (
+                <>
+                    {chat.showSuggestion && (
+                        <Suggestions
+                            list={chat.suggestions}
+                            handleDynamicSuggestion={handleDynamicSuggestion}
+                            handlePreBuildSuggestion={handlePreBuildSuggestion}
+                        />
+                    )}
+                    <ActionButton text={chat.text} />
+                </>
+            )}
         </>
     )
 }

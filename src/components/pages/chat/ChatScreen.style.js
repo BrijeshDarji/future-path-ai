@@ -59,6 +59,11 @@ const ChatScreenWrapper = styled.div`
                     right: 8px;
                     cursor: pointer;
                 }
+
+                .send-loading {
+                    background-color: #c9a8f4;
+                    cursor: wait;
+                }
             }
         }
 

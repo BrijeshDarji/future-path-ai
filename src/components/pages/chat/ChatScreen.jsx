@@ -1,5 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
+import { toast } from "react-toastify";
+import clsx from 'clsx';
+import axios from "axios";
 
 import Loader from "../../controllers/Loader";
 
@@ -12,7 +15,12 @@ import {
     AcademicIcon,
     ComputerIcon,
     CareerIcon,
-    SendIcon
+    SendIcon,
+    LoadingIcon,
+    CHAT_TYPE,
+    SUGGESTION_TYPE,
+    googlePlacesApiUrl,
+    googlePlacesApiKey,
 } from "../../../assets/constants/Constant";
 
 import axiosInstance from "../../helpers/AxiosConfig";
@@ -59,16 +67,25 @@ function ChatScreen() {
     const handleSendMessage = (input) => {
         const userInput = input || message
 
-        showWelcomePrompt && setShowWelcomePrompt(false);
+        showWelcomePrompt && userInput && setShowWelcomePrompt(false);
 
         if (userInput.trim()) {
-            setChatData((prev) => [
-                ...prev,
-                {
-                    text: userInput,
-                    type: "user"
-                }
-            ]);
+            setChatData((prev) => {
+                prev.forEach(data => {
+                    if (data.showSuggestion) {
+                        data.showSuggestion = false
+                    }
+                })
+
+                return [
+                    ...prev,
+                    {
+                        text: userInput,
+                        type: CHAT_TYPE.USER
+                    }
+                ]
+            });
+            setMessage('');
             setLoading(true)
 
             axiosInstance.post(
@@ -82,17 +99,36 @@ function ChatScreen() {
                         ...prev,
                         {
                             text: response.data.reply,
-                            type: "machine",
+                            type: CHAT_TYPE.SYSTEM,
+                            suggestions: response.data.suggestions || [],
+                            showSuggestion: true
                         }
                     ]);
                 })
                 .catch(error => {
-                    console.log("🚀 ~ handleSendMessage ~ error:", error)
+                    const errorMessage = error.response?.data?.message || error.message
+                    toast.error(errorMessage)
+
+                    setChatData((prev) => {
+                        prev.forEach(data => {
+                            if (data.showSuggestion) {
+                                data.showSuggestion = false
+                            }
+                        })
+
+                        return [
+                            ...prev,
+                            {
+                                text: "FAKE_ERROR_RESPONSE",
+                                type: CHAT_TYPE.SYSTEM,
+                                showSuggestion: true
+                            }
+                        ]
+                    });
                 })
                 .finally(() => {
                     setLoading(false)
                 })
-            setMessage(''); // Clear the input field after sending
         }
     };
 
@@ -101,6 +137,125 @@ function ChatScreen() {
             handleSendMessage();
         }
     };
+
+    const handleDynamicSuggestion = () => { }
+
+    const handlePreBuildSuggestion = (suggestion) => {
+        setChatData((prev) => {
+            prev.forEach(data => {
+                if (data.showSuggestion) {
+                    data.showSuggestion = false
+                }
+            })
+
+            return [
+                ...prev,
+                {
+                    text: suggestion.title,
+                    type: CHAT_TYPE.USER
+                }
+            ]
+        });
+
+        if (suggestion.type === SUGGESTION_TYPE.GOOGLE_MAP) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    let lat = position.coords.latitude;
+                    let long = position.coords.longitude;
+
+                    if (!lat || !long) {
+                        toast.error("latitude and longitude are not available!")
+                        return
+                    }
+                    setLoading(true)
+
+                    axios({
+                        headers: {
+                            "X-Goog-Api-Key": googlePlacesApiKey,
+                            "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.googleMapsUri,places.rating,places.websiteUri",
+                        },
+                        url: googlePlacesApiUrl,
+                        method: "post",
+                        data: {
+                            "includedTypes": suggestion.includedTypes,
+                            "maxResultCount": 10,
+                            "locationRestriction": {
+                                "circle": {
+                                    "center": {
+                                        "latitude": 23.0340417,
+                                        "longitude": 72.5108759
+                                    },
+                                    "radius": 50000 // In meters
+                                }
+                            }
+                        }
+                    })
+                        .then(response => {
+                            const places = response.data?.places
+                            const totalPlaces = places?.length || 0
+
+                            if (!totalPlaces) {
+                                toast.error(`We couldn't find "${suggestion.title} within 50 KMs radius"`)
+                                return
+                            }
+                            const text = `Sure! Here are the top ${totalPlaces} nearby ${suggestion.plural} within 50 KMs radius.`
+
+                            setChatData((prev) => {
+                                prev.forEach(data => {
+                                    if (data.showSuggestion) {
+                                        data.showSuggestion = false
+                                    }
+                                })
+
+                                return [
+                                    ...prev,
+                                    {
+                                        text: text,
+                                        type: CHAT_TYPE.SYSTEM,
+                                        showSuggestion: true,
+                                        placesData: places,
+                                    }
+                                ]
+                            });
+                        })
+                        .catch(error => {
+                            const errorMessage = error.response?.data?.message || error.message
+                            toast.error(errorMessage)
+                        })
+                        .finally(() => {
+                            setLoading(false)
+                        })
+                },
+                    (error) => {
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                toast.error(`You've denied the location access request, so we can't "${suggestion.title}". If you want then please give us location access`);
+                                break;
+
+                            case error.POSITION_UNAVAILABLE:
+                                toast.error("Location information is unavailable, so we can't fetch nearby suggestion");
+                                break;
+
+                            case error.TIMEOUT:
+                                toast.error("The request to get your location is timed out, so we can't fetch nearby suggestion");
+                                break;
+
+                            case error.UNKNOWN_ERROR:
+                                toast.error("An unknown error occurred while fetching your location, so we can't fetch nearby suggestion");
+                                break;
+
+                            default:
+                                toast.error("An unknown error occurred while fetching your location, so we can't fetch nearby suggestion");
+                                break;
+                        }
+                    }
+                );
+            }
+            else {
+                toast.error("Geolocation is not supported by this browser, so we can't fetch nearby suggestion");
+            }
+        }
+    }
 
     return (
         <ChatScreenWrapper>
@@ -147,7 +302,7 @@ function ChatScreen() {
                             <AnimatePresence>
                                 {
                                     chatData && chatData.map((item, index) => (
-                                        item.type === "user"
+                                        item.type === CHAT_TYPE.USER
                                             ? (
                                                 <div className="user-response" key={index}>
                                                     {item.text}
@@ -163,7 +318,11 @@ function ChatScreen() {
                                                         />
 
                                                         <div>
-                                                            <ChatResponse chat={item} />
+                                                            <ChatResponse
+                                                                chat={item}
+                                                                handleDynamicSuggestion={handleDynamicSuggestion}
+                                                                handlePreBuildSuggestion={handlePreBuildSuggestion}
+                                                            />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -187,17 +346,28 @@ function ChatScreen() {
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
+                            spellCheck="true"
                         />
 
                         <div
-                            className="send-wrapper"
-                            onClick={handleSendMessage}
+                            className={clsx("send-wrapper", loading && "send-loading")}
+                            onClick={() => handleSendMessage()}
                         >
-                            <img
-                                src={SendIcon}
-                                alt="send"
-                                width={'20px'}
-                            />
+                            {loading
+                                ? (
+                                    <img
+                                        src={LoadingIcon}
+                                        alt="Loading"
+                                    />
+                                )
+                                : (
+                                    <img
+                                        src={SendIcon}
+                                        alt="send"
+                                        width={'20px'}
+                                    />
+                                )
+                            }
                         </div>
                     </div>
                 </div>
