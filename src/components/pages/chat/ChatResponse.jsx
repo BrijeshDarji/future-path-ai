@@ -4,6 +4,7 @@ import SplitText from '../../controllers/SplitText'
 import Suggestions from "../../controllers/Suggestions.jsx"
 import ActionButton from "../../controllers/ActionButton.jsx"
 import PlacesResponse from './PlacesResponse.jsx';
+import ImageUploader from './ImageUploader.jsx';
 
 function ChatResponse({
     chat,
@@ -34,6 +35,10 @@ function ChatResponse({
                 <PlacesResponse
                     places={chat.placesData}
                 />
+            )}
+
+            {chat.showImageBox && (
+                <ImageUploader />
             )}
 
             {textAnimationComplete && (

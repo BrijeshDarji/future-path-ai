@@ -1,22 +1,30 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { IMAGE } from '../../../assets/constants/Constant';
-import { motion } from "framer-motion";
+import { toast } from 'react-toastify';
 
-const ImageUploader = (props) => {
+import axiosInstance from '../../helpers/AxiosConfig';
+
+import {
+    CrossRedIcon,
+    IMAGE,
+    LoadingIcon,
+} from '../../../assets/constants/Constant';
+
+const ImageUploader = () => {
     const [selectedImage, setSelectedImage] = useState(null);
-    const [showImageBox] = useState(props.showImageBox || false);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [error, setError] = useState('');
-    const [marksheetType, setMarksheetType] = useState('');
-
-    const markSheet = ['10th', '12th', 'graduation'];
+    const [loading, setLoading] = useState(false)
 
     const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
         if (acceptedFiles.length) {
             const file = acceptedFiles[0];
+
             if (file) {
                 setError('');
+                setSelectedFile(file)
                 const reader = new FileReader();
+
                 reader.onload = (e) => {
                     setSelectedImage(e.target.result);
                 };
@@ -26,98 +34,121 @@ const ImageUploader = (props) => {
 
         if (rejectedFiles.length > 0) {
             const file = rejectedFiles[0];
+
             if (file.file.size > IMAGE.SIZE.MAX) {
                 setError('File size should be less than 2MB');
-            } else {
+            }
+            else {
                 setError('Only jpg, jpeg, and png files are allowed');
             }
             setSelectedImage(null)
+            setSelectedFile(null)
             return;
         }
     }, []);
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
-        accept: {
-            'image': IMAGE.ALLOWED_TYPES,
-        },
+        // accept: IMAGE.ALLOWED_TYPES.join(","),
+        accept: "image/*",
         maxSize: IMAGE.SIZE.MAX,
         multiple: false
     });
 
     const handleRemoveImage = () => {
         setSelectedImage(null);
-    };
-
-    const handleTypeChange = (item) => {
-        setMarksheetType(item);
+        setSelectedFile(null)
     };
 
     const handleSubmit = () => {
-        if (!selectedImage || !marksheetType) {
-            setError('Please select an image and marksheet type.');
+        if (!selectedFile) {
+            setError('Please select an image');
             return;
         }
         setError('');
-        // Call API with for sumbit image
-        const data = {
-            image: selectedImage,
-            type: marksheetType
-        };
-        console.log('Submitted data: ', data);
+        setLoading(true)
+
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+
+        axiosInstance.post(
+            "/api/chat-bot/extract-details",
+            formData
+        )
+            .then(response => {
+                if (response.data) {
+                    if (!response.data.success) {
+                        toast.error(response.data.reply)
+                    }
+                }
+            })
+            .catch(error => {
+                const errorMessage = error.response?.data?.message || error.message
+                toast.error(errorMessage)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
     };
 
     return (
         <div>
             <div style={containerStyle}>
-                {showImageBox && !selectedImage && (
-                    <div {...getRootProps()} style={dropzoneStyle}>
+                {!selectedImage && (
+                    <div
+                        {...getRootProps()}
+                        style={dropzoneStyle}
+                    >
                         <input {...getInputProps()} />
                         <p>Drag 'n' drop an image here, or click to select one</p>
                     </div>
                 )}
+
                 {selectedImage && (
                     <div style={previewContainerStyle}>
                         <div style={{ position: 'relative', display: 'inline-block' }}>
-                            <img src={selectedImage} alt="Selected" style={imagePreviewStyle} />
-                            <button onClick={handleRemoveImage} style={removeButtonStyle}>✖</button>
+                            <img
+                                src={selectedImage}
+                                alt="Selected"
+                                style={imagePreviewStyle}
+                            />
+
+                            <div
+                                style={removeButtonStyle}
+                            >
+                                <img
+                                    src={CrossRedIcon}
+                                    alt="Selected"
+                                    width={20}
+                                    height={20}
+                                    onClick={handleRemoveImage}
+                                />
+                            </div>
                         </div>
                     </div>
                 )}
             </div>
-            {selectedImage && (
-                <div style={typeSelectionStyle}>
-                    <label htmlFor="marksheetType">Select Marksheet Type:</label>
-                    <div style={pillsContainer}>
-                        {markSheet.map((item, index) => (
-                            <motion.div
-                                initial={{ opacity: 0, x: 15 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.1 }}
-                                style={{
-                                    ...pills,
-                                    ...(marksheetType === item ? selectedPill : {}),
-                                }}
-                                key={index}
-                                onClick={() => handleTypeChange(item)}
-                            >
-                                {item}
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            )}
-            {error && <p style={errorStyle}>{error}</p>}
 
-            {
-                selectedImage && marksheetType &&
+            {error && (
+                <p style={errorStyle}>{error}</p>
+            )}
+
+            {selectedImage && (
                 <button
                     onClick={handleSubmit}
                     style={submitButtonStyle}
                 >
-                    Submit
+                    {loading
+                        ? (
+                            <img
+                                src={LoadingIcon}
+                                alt="Loading"
+                            />
+                        )
+                        : "Submit"
+                    }
                 </button>
-            }
+            )}
         </div >
     );
 };
@@ -152,8 +183,8 @@ const imagePreviewStyle = {
 
 const removeButtonStyle = {
     position: 'absolute',
-    top: '5px',
-    right: '5px',
+    top: '-9px',
+    right: '-9px',
     background: 'red',
     color: 'white',
     border: 'none',
@@ -172,10 +203,6 @@ const errorStyle = {
     marginTop: '10px'
 };
 
-const typeSelectionStyle = {
-    marginTop: '20px'
-};
-
 const submitButtonStyle = {
     marginTop: '20px',
     padding: '10px 20px',
@@ -183,33 +210,9 @@ const submitButtonStyle = {
     color: 'white',
     border: 'none',
     borderRadius: '5px',
-    cursor: 'pointer'
-};
-
-const pillsContainer = {
-    width: "100%",
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "10px",
-};
-
-const pills = {
-    border: "1px solid var(--matt-dark)",
-    padding: "8px 15px",
-    borderRadius: "30px",
-    fontSize: "14px",
-    cursor: "pointer",
-    background: "var(--matt-dark)",
-    transition: "0.2s ease-in-out",
-
-    "&:hover": {
-        border: "1px solid var(--sub-text-dark)",
-    }
-};
-
-const selectedPill = {
-    background: "#aa69ff",
-    color: "white",
+    cursor: 'pointer',
+    height: "45px",
+    width: "95px",
 };
 
 export default ImageUploader;

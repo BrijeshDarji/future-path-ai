@@ -50,7 +50,7 @@ const commonPromptData = [
     },
 ]
 
-function ChatScreen(props) {
+function ChatScreen() {
 
     const [chatData, setChatData] = useState([]);
     const [message, setMessage] = useState('');
@@ -139,8 +139,6 @@ function ChatScreen(props) {
             handleSendMessage();
         }
     };
-
-    const handleDynamicSuggestion = () => { }
 
     const handlePreBuildSuggestion = (suggestion) => {
         setChatData((prev) => {
@@ -258,7 +256,24 @@ function ChatScreen(props) {
             }
         }
         else if (suggestion.type === SUGGESTION_TYPE.UPLOAD) {
-            setShowImageBox(true);
+            const text = `Sure! Please upload markSheet photo of 10th, 12th or any graduation.`
+
+            setChatData((prev) => {
+                prev.forEach(data => {
+                    if (data.showSuggestion) {
+                        data.showSuggestion = false
+                    }
+                })
+
+                return [
+                    ...prev,
+                    {
+                        text: text,
+                        type: CHAT_TYPE.SYSTEM,
+                        showImageBox: true,
+                    }
+                ]
+            });
         }
     }
 
@@ -335,8 +350,6 @@ function ChatScreen(props) {
                                     ))
                                 }
                             </AnimatePresence>
-
-                            {showImageBox && <ImageUploader showImageBox={showImageBox} />}
 
                             {loading ? <Loader /> : null}
                         </div>
