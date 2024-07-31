@@ -21,6 +21,7 @@ a {
     color: var(--primary);
     text-decoration: inherit;
 }
+
 a:hover {
     color: var(--secondary);
 }
@@ -57,9 +58,11 @@ input[type="text"] {
     0% {
         background-position: 0 0;
     }
+
     50% {
         background-position: 400% 0;
     }
+
     100% {
         background-position: 0 0;
     }
@@ -69,9 +72,11 @@ input[type="text"] {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.1);
     }
+
     100% {
         transform: scale(1);
     }

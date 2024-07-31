@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import clsx from 'clsx';
@@ -256,7 +256,7 @@ function ChatScreen() {
             }
         }
     }
-      
+
     return (
         <ChatScreenWrapper>
             <div className="max-outlet" id="max-outlet">
