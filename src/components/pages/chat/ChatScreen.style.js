@@ -92,7 +92,7 @@ const ChatScreenWrapper = styled.div`
         padding-top: 200px;
 
         @media (max-width: 576px) {
-            padding: 130px 0 115px 0;
+            padding: 130px 0 0 0;
         }
 
         .title {
@@ -177,7 +177,7 @@ const ChatScreenWrapper = styled.div`
     }
 
     .chat-prompt {
-        padding: 90px 0 100px 0;
+        padding: 90px 0 0 0;
         height: 100%;
         width: 100%;
         display: flex;

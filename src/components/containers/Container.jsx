@@ -1,18 +1,18 @@
-import { memo } from "react"
+import { memo } from "react";
 
-import Header from "./Header"
-import Footer from "./Footer"
+import Header from "./Header";
+import Footer from "./Footer";
+import ScrollToBottom from "./ScrollToBottom";
 
 function Container(props) {
-    return (
-        <>
-            <Header />
-            <main>
-                {props.children}
-            </main>
-            <Footer />
-        </>
-    )
+  return (
+    <>
+      <Header />
+      <main className="main-div-content">{props.children}</main>
+      <ScrollToBottom />
+      <Footer />
+    </>
+  );
 }
 
-export default memo(Container)
+export default memo(Container);
