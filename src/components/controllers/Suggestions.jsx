@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { motion } from "framer-motion";
 
 import { SUGGESTION_TYPE } from '../../assets/constants/Constant';
+import { useEffect } from 'react';
 
 const SuggestionsWrapper = styled.div`
     width: 100%;
@@ -72,6 +73,21 @@ function Suggestions({
     handleDynamicSuggestion,
     handlePreBuildSuggestion,
 }) {
+
+    const data = document?.getElementById?.("max-outlet");
+    useEffect(() => {
+      const isScrollAvailable = window?.innerHeight < data?.clientHeight;
+      if (isScrollAvailable) {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+    }, [
+      window?.innerHeight,
+      data?.clientHeight,
+    ]);
+
     return (
         <SuggestionsWrapper>
             {list.length

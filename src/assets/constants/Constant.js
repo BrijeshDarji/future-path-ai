@@ -29,6 +29,7 @@ export const MapIcon = `${cdnLink}/images/svg/map.svg`;
 export const WebsiteIcon = `${cdnLink}/images/svg/website.svg`;
 
 export const LoadingIcon = `${cdnLink}/images/gif/loading.gif`;
+export const DownArrowIcon = `${cdnLink}/images/svg/down-arrow.svg`;
 
 // Chat types
 export const CHAT_TYPE = {

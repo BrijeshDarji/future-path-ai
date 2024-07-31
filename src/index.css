@@ -46,6 +46,13 @@ input[type="text"] {
     justify-content: center;
     align-items: center;
 }
+
+.main-div-content {
+    min-height: 700px;
+    overflow: auto;
+    padding: 0 0 110px;
+}
+
 @keyframes glowing {
     0% {
         background-position: 0 0;
