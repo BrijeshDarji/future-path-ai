@@ -320,7 +320,7 @@ function ChatScreen() {
                                                         <div>
                                                             <ChatResponse
                                                                 chat={item}
-                                                                handleDynamicSuggestion={handleDynamicSuggestion}
+                                                                handleDynamicSuggestion={(item) => handleSendMessage(item)}
                                                                 handlePreBuildSuggestion={handlePreBuildSuggestion}
                                                             />
                                                         </div>
