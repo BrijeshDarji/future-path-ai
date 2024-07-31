@@ -4,7 +4,8 @@
         "footer",
         "readme",
         "chat",
-        "welcome"
+        "welcome",
+        "netlify"
     ],
     "cSpell.ignoreWords": [
         "NextGen",
