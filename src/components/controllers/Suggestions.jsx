@@ -1,5 +1,6 @@
-import styled from 'styled-components'
+import { useEffect } from 'react';
 import { motion } from "framer-motion";
+import styled from 'styled-components'
 
 import { SUGGESTION_TYPE } from '../../assets/constants/Constant';
 
@@ -72,6 +73,22 @@ function Suggestions({
     handleDynamicSuggestion,
     handlePreBuildSuggestion,
 }) {
+    const data = document?.getElementById?.("max-outlet");
+
+    useEffect(() => {
+        const isScrollAvailable = window?.innerHeight < data?.clientHeight;
+
+        if (isScrollAvailable) {
+            window.scrollTo({
+                top: document.body.scrollHeight,
+                behavior: "smooth",
+            });
+        }
+    }, [
+        window?.innerHeight,
+        data?.clientHeight,
+    ]);
+
     return (
         <SuggestionsWrapper>
             {list.length
