@@ -264,7 +264,7 @@ function ChatScreen(props) {
 
     return (
         <ChatScreenWrapper>
-            <div className="max-outlet">
+            <div className="max-outlet" id="max-outlet">
                 {showWelcomePrompt
                     ? (
                         <motion.div

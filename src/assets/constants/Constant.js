@@ -27,6 +27,7 @@ export const OpenXcell = `${cdnLink}/images/svg/OpenXcell.svg`;
 export const RedHeart = `${cdnLink}/images/svg/red-heart.svg`;
 export const MapIcon = `${cdnLink}/images/svg/map.svg`;
 export const WebsiteIcon = `${cdnLink}/images/svg/website.svg`;
+export const DownArrowIcon = `${cdnLink}/images/svg/down-arrow.svg`;
 
 export const LoadingIcon = `${cdnLink}/images/gif/loading.gif`;
 
