@@ -29,8 +29,8 @@ import ChatResponse from "./ChatResponse";
 const commonPromptData = [
     {
         id: 0,
-        text: "Which career path is right for me based on my academic result?",
-        icon: AcademicIcon,
+        text: "What are some good online resources for career planning after 12th grade?",
+        icon: CareerIcon,
     },
     {
         id: 1,
@@ -39,13 +39,13 @@ const commonPromptData = [
     },
     {
         id: 2,
-        text: "I'm interested in preparing for competitive exams.",
+        text: "I'm interested in preparing for competitive exams",
         icon: ExamIcon,
     },
     {
         id: 3,
-        text: "Can you offer some guidance?, I just started my career.",
-        icon: CareerIcon,
+        text: "Can I pursue professional courses directly after 10th?",
+        icon: AcademicIcon,
     },
 ]
 
@@ -272,7 +272,7 @@ function ChatScreen() {
                             </div>
 
                             <div className="title">
-                                What would like to know?
+                                What would you like to know?
                             </div>
 
                             <div className="content">
@@ -320,7 +320,7 @@ function ChatScreen() {
                                                         <div>
                                                             <ChatResponse
                                                                 chat={item}
-                                                                handleDynamicSuggestion={handleDynamicSuggestion}
+                                                                handleDynamicSuggestion={(item) => handleSendMessage(item)}
                                                                 handlePreBuildSuggestion={handlePreBuildSuggestion}
                                                             />
                                                         </div>
