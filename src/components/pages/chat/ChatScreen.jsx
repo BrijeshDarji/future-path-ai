@@ -25,6 +25,7 @@ import {
 
 import axiosInstance from "../../helpers/AxiosConfig";
 import ChatResponse from "./ChatResponse";
+import ImageUploader from "./ImageUploader";
 
 const commonPromptData = [
     {
@@ -49,12 +50,13 @@ const commonPromptData = [
     },
 ]
 
-function ChatScreen() {
+function ChatScreen(props) {
 
     const [chatData, setChatData] = useState([]);
     const [message, setMessage] = useState('');
     const [showWelcomePrompt, setShowWelcomePrompt] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [showImageBox, setShowImageBox] = useState(false);
     const bottomRef = useRef(null);
 
     useEffect(() => {
@@ -255,6 +257,9 @@ function ChatScreen() {
                 toast.error("Geolocation is not supported by this browser, so we can't fetch nearby suggestion");
             }
         }
+        else if (suggestion.type === SUGGESTION_TYPE.UPLOAD) {
+            setShowImageBox(true);
+        }
     }
 
     return (
@@ -331,6 +336,8 @@ function ChatScreen() {
                                 }
                             </AnimatePresence>
 
+                            {showImageBox && <ImageUploader showImageBox={showImageBox} />}
+
                             {loading ? <Loader /> : null}
                         </div>
                     )
@@ -338,6 +345,7 @@ function ChatScreen() {
 
                 <div className="chat-input">
                     <div className="position-relative">
+                        <div></div>
                         <input
                             type="text"
                             name="chat"

@@ -41,3 +41,11 @@ export const SUGGESTION_TYPE = {
     GOOGLE_MAP: "GOOGLE_MAP",
     UPLOAD: "UPLOAD"
 }
+
+// Image
+export const IMAGE = {
+    SIZE: {
+        MAX: 2000000, // bytes (2 MB)
+    },
+    ALLOWED_TYPES: ['image/jpg', 'image/jpeg', 'image/png']
+}

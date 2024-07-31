@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { motion } from "framer-motion";
+import { useState } from 'react';
 
 import { SUGGESTION_TYPE } from '../../assets/constants/Constant';
 
@@ -47,7 +48,6 @@ const SuggestionsWrapper = styled.div`
         }
     }
 `
-
 const findMoreData = [
     {
         title: 'Find nearby Secondary Schools',
