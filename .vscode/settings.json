@@ -3,7 +3,8 @@
         "errorBoundary",
         "footer",
         "readme",
-        "chat"
+        "chat",
+        "welcome"
     ],
     "cSpell.ignoreWords": [
         "NextGen",
