@@ -373,6 +373,8 @@ function ChatScreen() {
                                     <img
                                         src={LoadingIcon}
                                         alt="Loading"
+                                        width={60}
+                                        height="auto"
                                     />
                                 )
                                 : (
