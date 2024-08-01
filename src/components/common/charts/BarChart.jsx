@@ -67,6 +67,22 @@ const chartOptions = (chartData) => {
         breakpoint: 1000,
         options: {
           chart: {
+            width: 500,
+          },
+          plotOptions: {
+            bar: {
+              horizontal: false,
+            },
+          },
+          legend: {
+            position: "bottom",
+          },
+        },
+      },
+      {
+        breakpoint: 600,
+        options: {
+          chart: {
             width: 300,
           },
           plotOptions: {
