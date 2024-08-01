@@ -3,13 +3,13 @@ import { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import ChartWrapper from "./Chart.style";
 
-const DonutChart = ({ className }) => {
+const DonutChart = ({ className, chartData }) => {
   const chartRef = useRef(null);
   const refreshMode = () => {
     if (!chartRef?.current) {
       return;
     }
-    const chart = new ApexCharts(chartRef?.current, getChartOptions());
+    const chart = new ApexCharts(chartRef?.current, getChartOptions(chartData));
     if (chart !== undefined) {
       setTimeout(() => {
         chart?.render();
@@ -40,7 +40,7 @@ const DonutChart = ({ className }) => {
             ref={chartRef}
             id="kt_donut_chart_widget"
             className="chart-container"
-            // style={{ height: '450px' }}
+          // style={{ height: '450px' }}
           ></div>
         </div>
       </div>
@@ -50,11 +50,15 @@ const DonutChart = ({ className }) => {
 
 export { DonutChart };
 
-function getChartOptions() {
+function getChartOptions(chartData) {
+  let chartValues = []
+  let chartLabels = []
+  chartData.map((data) => chartValues.push(data.obtain_marks))
+  chartData.map((data) => chartLabels.push(data.subject_name))
   const labelColor = "#ffffff";
   return {
-    series: [44, 55, 41, 17, 15],
-    labels: ["Arts", "Commerce", "Science", "Management", "IT"],
+    series: chartValues,
+    labels: chartLabels,
     legend: {
       show: true,
       position: "left",

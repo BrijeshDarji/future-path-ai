@@ -3,23 +3,28 @@ import { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import ChartWrapper from "./Chart.style";
 
-const chartOptions = () => {
+const chartOptions = (chartData) => {
+  let cValues = []
+  let cLabels = []
+  chartData.map((data) => cValues.push(data.obtain_marks))
+  chartData.map((data) => cLabels.push(data.subject_name))
   const labelColor = "#2B2B40";
 
   return {
+    // series: cValues,
     series: [
       {
-        name: "Science",
-        data: [44, 55, 57, 56, 61],
+        name: "Marks",
+        data: cValues,
       },
-      {
-        name: "Commerce",
-        data: [76, 85, 101, 98, 87],
-      },
-      {
-        name: "Arts",
-        data: [35, 41, 36, 26, 45],
-      },
+      // {
+      //   name: "Commerce",
+      //   data: [76, 85, 101, 98, 87],
+      // },
+      // {
+      //   name: "Arts",
+      //   data: [35, 41, 36, 26, 45],
+      // },
     ],
     legend: {
       show: true,
@@ -52,8 +57,8 @@ const chartOptions = () => {
     plotOptions: {
       bar: {
         borderRadius: 0,
-        horizontal: true,
-        columnWidth: "70%",
+        horizontal: false,
+        columnWidth: "50%",
         barHeight: "70%",
       },
     },
@@ -78,9 +83,9 @@ const chartOptions = () => {
     dataLabels: {
       enabled: false,
     },
-    colors: ["#df40da", "#FBBE22", "#8100ce"], //["#FBBE22", "#3bb0de", "#ff4d6a"]
+    colors: ["#FBBE22"], //["#FBBE22", "#3bb0de", "#ff4d6a"]
     xaxis: {
-      categories: ["2020", "2021", "2022", "2023", "2024"],
+      categories: cLabels,
       labels: {
         style: {
           fontSize: "11px",
@@ -127,13 +132,13 @@ const chartOptions = () => {
   };
 };
 
-const BarChart = ({ className }) => {
+const BarChart = ({ className, chartData }) => {
   const chartRef = useRef(null);
   const refreshMode = () => {
     if (!chartRef?.current) {
       return;
     }
-    const chart = new ApexCharts(chartRef?.current, chartOptions());
+    const chart = new ApexCharts(chartRef?.current, chartOptions(chartData));
     if (chart !== undefined) {
       setTimeout(() => {
         chart?.render();

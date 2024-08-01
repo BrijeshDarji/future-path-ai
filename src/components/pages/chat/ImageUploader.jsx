@@ -9,12 +9,14 @@ import {
     IMAGE,
     LoadingIcon,
 } from '../../../assets/constants/Constant';
+import { BarChart } from '../../common/charts/BarChart';
 
 const ImageUploader = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false)
+    const [chartData, setChartData] = useState([])
 
     const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
         if (acceptedFiles.length) {
@@ -77,13 +79,17 @@ const ImageUploader = () => {
         )
             .then(response => {
                 if (response.data) {
-                    if (!response.data.success) {
+                    if (response.data.success) {
+                        setChartData(response.data.reply ?? [])
+                        // setsuggestions
+                    } else {
                         toast.error(response.data.reply)
                     }
+
                 }
             })
             .catch(error => {
-                const errorMessage = error.response?.data?.message || error.message
+                const errorMessage = error.response?.data?.reply || error.message
                 toast.error(errorMessage)
             })
             .finally(() => {
@@ -152,6 +158,7 @@ const ImageUploader = () => {
                     }
                 </button>
             )}
+            {chartData.length > 0 && <BarChart chartData={chartData} />}
         </div >
     );
 };
