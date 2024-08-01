@@ -137,12 +137,15 @@ const ImageUploader = () => {
                 <button
                     onClick={handleSubmit}
                     style={submitButtonStyle}
+                    disabled={loading}
                 >
                     {loading
                         ? (
                             <img
                                 src={LoadingIcon}
                                 alt="Loading"
+                                width={60}
+                                height="auto"
                             />
                         )
                         : "Submit"
