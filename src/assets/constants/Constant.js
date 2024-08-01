@@ -50,5 +50,8 @@ export const IMAGE = {
         MAX: 2000000, // 2 MB
         MIN: 0.1
     },
-    ALLOWED_TYPES: ['image/jpg', 'image/jpeg', 'image/png']
+    ALLOWED_TYPES: {
+        'image/png': ['.png'],
+        'image/jpeg': ['.jpeg', '.jpg'],
+    }
 }
