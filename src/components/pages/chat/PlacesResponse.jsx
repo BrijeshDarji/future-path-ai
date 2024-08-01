@@ -34,7 +34,7 @@ function PlacesResponse({ places }) {
 
                                 {rating && (
                                     <>
-                                        &ensp;<span className="rating">4.3 ★</span>
+                                        &ensp;<span className="rating">{rating} ★</span>
                                     </>
                                 )}
                             </div>
