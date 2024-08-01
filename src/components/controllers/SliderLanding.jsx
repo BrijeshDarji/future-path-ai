@@ -71,7 +71,7 @@ const timePerSlide = 5 * 1000;
 const contentArray = [
 	{
 		id: 0,
-		text: "Which careers are open to Science stream students?",
+		text: "Which career options are open to Science stream students?",
 		image:
 			"https://cdn.dribbble.com/userupload/3566470/file/original-28fcb0756f184d9e12cb0fddfd8ecdd5.png?resize=752x",
 		prompt_icon:

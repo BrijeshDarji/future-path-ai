@@ -8,6 +8,13 @@
     --sub-text-dark: #939393;
 }
 
+pre {
+    font-family: Inter,
+        system-ui,
+        Helvetica,
+        Arial,
+        sans-serif;
+}
 * {
     box-sizing: border-box;
 }

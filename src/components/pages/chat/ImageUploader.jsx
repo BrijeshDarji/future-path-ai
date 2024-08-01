@@ -2,6 +2,9 @@ import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'react-toastify';
 
+import SuggestionAndActions from './SuggestionAndActions';
+import BarChart from '../../common/charts/BarChart';
+
 import axiosInstance from '../../helpers/AxiosConfig';
 
 import {
@@ -10,11 +13,32 @@ import {
     LoadingIcon,
 } from '../../../assets/constants/Constant';
 
-const ImageUploader = () => {
+import { htmlToPlainText } from '../../helpers/Utils';
+
+import {
+    Container,
+    Dropzone,
+    ImagePreview,
+    PreviewContainer,
+    RemoveButton,
+    SubmitButton,
+} from './ImageUploader.style';
+
+const getMessage = {
+    "file-invalid-type": "Invalid file type. Only jpg, jpeg, and png files are allowed",
+    "file-too-large": `File is larger than ${IMAGE.SIZE.MAX / 1000000} MB.`
+}
+
+const ImageUploader = ({
+    handleDynamicSuggestion,
+    handlePreBuildSuggestion,
+    setInputLoading,
+}) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false)
+    const [markSheetDetails, setMarkSheetDetails] = useState({})
 
     const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
         if (acceptedFiles.length) {
@@ -33,14 +57,15 @@ const ImageUploader = () => {
         }
 
         if (rejectedFiles.length > 0) {
-            const file = rejectedFiles[0];
+            rejectedFiles.forEach(rejectedFile => {
+                if (rejectedFile?.errors?.length) {
+                    rejectedFile.errors.forEach(error => {
+                        const errorMessage = getMessage[error.code] || error.message
+                        toast.error(errorMessage)
+                    })
+                }
+            })
 
-            if (file.file.size > IMAGE.SIZE.MAX) {
-                setError('File size should be less than 2MB');
-            }
-            else {
-                setError('Only jpg, jpeg, and png files are allowed');
-            }
             setSelectedImage(null)
             setSelectedFile(null)
             return;
@@ -49,8 +74,7 @@ const ImageUploader = () => {
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop,
-        // accept: IMAGE.ALLOWED_TYPES.join(","),
-        accept: "image/*",
+        accept: IMAGE.ALLOWED_TYPES,
         maxSize: IMAGE.SIZE.MAX,
         multiple: false
     });
@@ -67,6 +91,7 @@ const ImageUploader = () => {
         }
         setError('');
         setLoading(true)
+        setInputLoading(true)
 
         const formData = new FormData();
         formData.append('image', selectedFile);
@@ -77,66 +102,77 @@ const ImageUploader = () => {
         )
             .then(response => {
                 if (response.data) {
-                    if (!response.data.success) {
+                    if (response.data.success) {
+                        setMarkSheetDetails(response.data)
+                    }
+                    else {
                         toast.error(response.data.reply)
                     }
                 }
             })
             .catch(error => {
-                const errorMessage = error.response?.data?.message || error.message
+                const errorMessage = error.response?.data?.reply || error.message
                 toast.error(errorMessage)
             })
             .finally(() => {
                 setLoading(false)
+                setInputLoading(false)
             })
     };
 
+    const hasValidMarketSheetData = markSheetDetails.reply?.length
+    let text = ""
+
+    if (hasValidMarketSheetData && markSheetDetails.suggestion) {
+        text = htmlToPlainText(markSheetDetails.suggestion)
+    }
+
     return (
         <div>
-            <div style={containerStyle}>
+            <Container>
                 {!selectedImage && (
-                    <div
+                    <Dropzone
                         {...getRootProps()}
-                        style={dropzoneStyle}
                     >
                         <input {...getInputProps()} />
                         <p>Drag 'n' drop an image here, or click to select one</p>
-                    </div>
+                    </Dropzone>
                 )}
 
                 {selectedImage && (
-                    <div style={previewContainerStyle}>
+                    <PreviewContainer>
                         <div style={{ position: 'relative', display: 'inline-block' }}>
-                            <img
+                            <ImagePreview
                                 src={selectedImage}
                                 alt="Selected"
-                                style={imagePreviewStyle}
                             />
 
-                            <div
-                                style={removeButtonStyle}
-                            >
-                                <img
-                                    src={CrossRedIcon}
-                                    alt="Selected"
-                                    width={20}
-                                    height={20}
-                                    onClick={handleRemoveImage}
-                                />
-                            </div>
+                            {
+                                !hasValidMarketSheetData &&
+                                !loading && (
+                                    <RemoveButton>
+                                        <img
+                                            src={CrossRedIcon}
+                                            alt="Selected"
+                                            width={20}
+                                            height={20}
+                                            onClick={handleRemoveImage}
+                                        />
+                                    </RemoveButton>
+                                )
+                            }
                         </div>
-                    </div>
+                    </PreviewContainer>
                 )}
-            </div>
+            </Container>
 
             {error && (
-                <p style={errorStyle}>{error}</p>
+                <Error>{error}</Error>
             )}
 
-            {selectedImage && (
-                <button
+            {selectedImage && !hasValidMarketSheetData && (
+                <SubmitButton
                     onClick={handleSubmit}
-                    style={submitButtonStyle}
                     disabled={loading}
                 >
                     {loading
@@ -150,72 +186,35 @@ const ImageUploader = () => {
                         )
                         : "Submit"
                     }
-                </button>
+                </SubmitButton>
             )}
+
+            {
+                hasValidMarketSheetData &&
+                markSheetDetails.suggestion && (
+                    <div dangerouslySetInnerHTML={{ __html: markSheetDetails.suggestion }}></div>
+                )
+            }
+
+            {
+                hasValidMarketSheetData && (
+                    <>
+                        <BarChart chartData={markSheetDetails.reply} />
+
+                        <SuggestionAndActions
+                            chat={{
+                                showSuggestion: true,
+                                text,
+                                hideActions: false,
+                            }}
+                            handleDynamicSuggestion={handleDynamicSuggestion}
+                            handlePreBuildSuggestion={handlePreBuildSuggestion}
+                        />
+                    </>
+                )
+            }
         </div >
     );
-};
-
-const containerStyle = {
-    display: 'flex',
-    alignItems: 'flex-start',
-    marginTop: '20px'
-};
-
-const dropzoneStyle = {
-    border: '2px dashed #aa69ff',
-    borderRadius: '5px',
-    padding: '20px',
-    textAlign: 'center',
-    cursor: 'pointer',
-    marginRight: '20px'
-};
-
-const previewContainerStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-};
-
-const imagePreviewStyle = {
-    width: '150px',
-    height: '150px',
-    objectFit: 'cover',
-    display: 'block'
-};
-
-const removeButtonStyle = {
-    position: 'absolute',
-    top: '-9px',
-    right: '-9px',
-    background: 'red',
-    color: 'white',
-    border: 'none',
-    borderRadius: '50%',
-    width: '25px',
-    height: '25px',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    fontSize: '18px'
-};
-
-const errorStyle = {
-    color: 'red',
-    marginTop: '10px'
-};
-
-const submitButtonStyle = {
-    marginTop: '20px',
-    padding: '10px 20px',
-    background: '#aa69ff',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    height: "45px",
-    width: "95px",
 };
 
 export default ImageUploader;
