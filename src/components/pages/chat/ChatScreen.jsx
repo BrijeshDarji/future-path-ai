@@ -35,7 +35,7 @@ const commonPromptData = [
     },
     {
         id: 1,
-        text: "As a recent graduate, what are five in-demand IT jobs I should consider?",
+        text: "As a recent graduate, Can you give me tips for acing a job interview?",
         icon: ComputerIcon,
     },
     {
@@ -56,6 +56,7 @@ function ChatScreen() {
     const [message, setMessage] = useState('');
     const [showWelcomePrompt, setShowWelcomePrompt] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [inputLoading, setInputLoading] = useState(false);
     const bottomRef = useRef(null);
 
     const handleSendMessage = (input) => {
@@ -127,7 +128,11 @@ function ChatScreen() {
     };
 
     const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
+        if (
+            event.key === 'Enter' &&
+            !loading &&
+            !inputLoading
+        ) {
             handleSendMessage();
         }
     };
@@ -250,7 +255,7 @@ function ChatScreen() {
             }
         }
         else if (suggestion.type === SUGGESTION_TYPE.UPLOAD) {
-            const text = `Sure! Please upload markSheet photo of 10th, 12th or any graduation.`
+            const text = `Sure! Please upload mark-sheet photo of 10th, 12th or any graduation degree.`
 
             setChatData((prev) => {
                 prev.forEach(data => {
@@ -265,6 +270,7 @@ function ChatScreen() {
                         text: text,
                         type: CHAT_TYPE.SYSTEM,
                         showImageBox: true,
+                        hideActions: true,
                     }
                 ]
             });
@@ -336,6 +342,7 @@ function ChatScreen() {
                                                                 chat={item}
                                                                 handleDynamicSuggestion={(item) => handleSendMessage(item)}
                                                                 handlePreBuildSuggestion={handlePreBuildSuggestion}
+                                                                setInputLoading={setInputLoading}
                                                             />
                                                         </div>
                                                     </div>
@@ -368,7 +375,7 @@ function ChatScreen() {
                             className={clsx("send-wrapper", loading && "send-loading")}
                             onClick={() => handleSendMessage()}
                         >
-                            {loading
+                            {loading || inputLoading
                                 ? (
                                     <img
                                         src={LoadingIcon}

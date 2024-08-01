@@ -5,7 +5,12 @@ import { useNavigate } from "react-router-dom";
 import LandingWrapper from "./HomeScreen.style";
 import FormButton from "./../../controllers/FormButton";
 import SliderLanding from "./../../controllers/SliderLanding";
-import { BackgroundImage, Logo } from "../../../assets/constants/Constant";
+
+import {
+	BackgroundImage,
+	Logo,
+} from "../../../assets/constants/Constant";
+
 import { URL_CHAT_SCREEN } from "../../../assets/constants/SitePath";
 
 function HomeScreen() {

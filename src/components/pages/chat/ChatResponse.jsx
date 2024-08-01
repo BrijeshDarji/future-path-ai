@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
 import SplitText from '../../controllers/SplitText'
-import Suggestions from "../../controllers/Suggestions.jsx"
-import ActionButton from "../../controllers/ActionButton.jsx"
+import SuggestionAndActions from './SuggestionAndActions.jsx';
 import PlacesResponse from './PlacesResponse.jsx';
 import ImageUploader from './ImageUploader.jsx';
 
@@ -10,6 +9,7 @@ function ChatResponse({
     chat,
     handleDynamicSuggestion,
     handlePreBuildSuggestion,
+    setInputLoading,
 }) {
     const [textAnimationComplete, setTextAnimationComplete] = useState(false);
 
@@ -38,23 +38,20 @@ function ChatResponse({
             )}
 
             {chat.showImageBox && (
-                <ImageUploader />
+                <ImageUploader
+                    chat={chat}
+                    handleDynamicSuggestion={handleDynamicSuggestion}
+                    handlePreBuildSuggestion={handlePreBuildSuggestion}
+                    setInputLoading={setInputLoading}
+                />
             )}
 
             {textAnimationComplete && (
-                <>
-                    {chat.showSuggestion && (
-                        <Suggestions
-                            list={chat.suggestions}
-                            handleDynamicSuggestion={handleDynamicSuggestion}
-                            handlePreBuildSuggestion={handlePreBuildSuggestion}
-                        />
-                    )}
-
-                    {!chat.hideActions && (
-                        <ActionButton text={chat.text} />
-                    )}
-                </>
+                <SuggestionAndActions
+                    chat={chat}
+                    handleDynamicSuggestion={handleDynamicSuggestion}
+                    handlePreBuildSuggestion={handlePreBuildSuggestion}
+                />
             )}
         </>
     )

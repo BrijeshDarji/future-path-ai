@@ -1,6 +1,7 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useRef } from "react";
+
 import ApexCharts from "apexcharts";
+
 import ChartWrapper from "./Chart.style";
 
 const chartOptions = (chartData) => {
@@ -175,7 +176,7 @@ const BarChart = ({ className, chartData }) => {
   }, [chartRef]);
   return (
     <ChartWrapper>
-      <div className={`card w-100 ${className}`} style={{ height: "550px" }}>
+      <div className={`card w-100 ${className}`}>
         {/* begin::Body */}
         <div className="card-body d-flex flex-column p-0 w-100 position-relative">
           {/* begin::Chart */}
@@ -192,4 +193,4 @@ const BarChart = ({ className, chartData }) => {
   );
 };
 
-export { BarChart };
+export default BarChart
