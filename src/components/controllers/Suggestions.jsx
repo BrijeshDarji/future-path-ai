@@ -5,10 +5,11 @@ import { SuggestionsWrapper } from './Suggestions.style';
 
 const findMoreData = [
     {
-        title: 'Find nearby Secondary Schools',
+        title: 'Find nearby Higher Secondary Schools',
         type: SUGGESTION_TYPE.GOOGLE_MAP,
         includedTypes: ["secondary_school"],
-        plural: "Secondary Schools"
+        excludedTypes: ["preschool", "primary_school"],
+        plural: "Higher Secondary Schools"
     },
     {
         title: 'Find nearby Universities',

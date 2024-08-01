@@ -56,7 +56,6 @@ function ChatScreen() {
     const [message, setMessage] = useState('');
     const [showWelcomePrompt, setShowWelcomePrompt] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [showImageBox, setShowImageBox] = useState(false);
     const bottomRef = useRef(null);
 
     const handleSendMessage = (input) => {
@@ -171,6 +170,7 @@ function ChatScreen() {
                         method: "post",
                         data: {
                             "includedTypes": suggestion.includedTypes,
+                            "excludedTypes": suggestion.excludedTypes,
                             "maxResultCount": 10,
                             "locationRestriction": {
                                 "circle": {
@@ -206,6 +206,7 @@ function ChatScreen() {
                                         text: text,
                                         type: CHAT_TYPE.SYSTEM,
                                         showSuggestion: true,
+                                        hideActions: true,
                                         placesData: places,
                                     }
                                 ]
