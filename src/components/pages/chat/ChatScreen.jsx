@@ -25,6 +25,7 @@ import {
 
 import axiosInstance from "../../helpers/AxiosConfig";
 import ChatResponse from "./ChatResponse";
+import ImageUploader from "./ImageUploader";
 
 const commonPromptData = [
     {
@@ -55,6 +56,7 @@ function ChatScreen() {
     const [message, setMessage] = useState('');
     const [showWelcomePrompt, setShowWelcomePrompt] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [showImageBox, setShowImageBox] = useState(false);
     const bottomRef = useRef(null);
 
     useEffect(() => {
@@ -137,8 +139,6 @@ function ChatScreen() {
             handleSendMessage();
         }
     };
-
-    const handleDynamicSuggestion = () => { }
 
     const handlePreBuildSuggestion = (suggestion) => {
         setChatData((prev) => {
@@ -255,6 +255,26 @@ function ChatScreen() {
                 toast.error("Geolocation is not supported by this browser, so we can't fetch nearby suggestion");
             }
         }
+        else if (suggestion.type === SUGGESTION_TYPE.UPLOAD) {
+            const text = `Sure! Please upload markSheet photo of 10th, 12th or any graduation.`
+
+            setChatData((prev) => {
+                prev.forEach(data => {
+                    if (data.showSuggestion) {
+                        data.showSuggestion = false
+                    }
+                })
+
+                return [
+                    ...prev,
+                    {
+                        text: text,
+                        type: CHAT_TYPE.SYSTEM,
+                        showImageBox: true,
+                    }
+                ]
+            });
+        }
     }
 
     return (
@@ -338,6 +358,7 @@ function ChatScreen() {
 
                 <div className="chat-input">
                     <div className="position-relative">
+                        <div></div>
                         <input
                             type="text"
                             name="chat"

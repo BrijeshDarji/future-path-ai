@@ -28,6 +28,7 @@ export const RedHeart = `${cdnLink}/images/svg/red-heart.svg`;
 export const MapIcon = `${cdnLink}/images/svg/map.svg`;
 export const WebsiteIcon = `${cdnLink}/images/svg/website.svg`;
 export const DownArrowIcon = `${cdnLink}/images/svg/down-arrow.svg`;
+export const CrossRedIcon = `${cdnLink}/images/svg/cross-white.svg`;
 
 export const LoadingIcon = `${cdnLink}/images/gif/loading.gif`;
 
@@ -41,4 +42,13 @@ export const CHAT_TYPE = {
 export const SUGGESTION_TYPE = {
     GOOGLE_MAP: "GOOGLE_MAP",
     UPLOAD: "UPLOAD"
+}
+
+// Image
+export const IMAGE = {
+    SIZE: { // In bytes
+        MAX: 2000000, // 2 MB
+        MIN: 0.1
+    },
+    ALLOWED_TYPES: ['image/jpg', 'image/jpeg', 'image/png']
 }

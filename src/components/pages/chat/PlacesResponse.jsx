@@ -46,7 +46,7 @@ function PlacesResponse({ places }) {
                             <PlacePillsWrapper>
                                 {websiteUri && (
                                     <div className='pills'>
-                                        <a href="https://www.gujaratuniversity.ac.in/" target="_blank">
+                                        <a href={websiteUri} target="_blank">
                                             <img
                                                 src={WebsiteIcon}
                                                 alt="Website"
@@ -58,7 +58,7 @@ function PlacesResponse({ places }) {
 
                                 {googleMapsUri && (
                                     <div className='pills'>
-                                        <a href="https://maps.google.com/?cid=1914170029072132991" target="_blank">
+                                        <a href={googleMapsUri} target="_blank">
                                             <img
                                                 src={MapIcon}
                                                 alt="Map"
