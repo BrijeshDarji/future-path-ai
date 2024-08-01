@@ -4,6 +4,7 @@ import SplitText from '../../controllers/SplitText'
 import Suggestions from "../../controllers/Suggestions.jsx"
 import ActionButton from "../../controllers/ActionButton.jsx"
 import PlacesResponse from './PlacesResponse.jsx';
+import ImageUploader from './ImageUploader.jsx';
 
 function ChatResponse({
     chat,
@@ -36,6 +37,10 @@ function ChatResponse({
                 />
             )}
 
+            {chat.showImageBox && (
+                <ImageUploader />
+            )}
+
             {textAnimationComplete && (
                 <>
                     {chat.showSuggestion && (
@@ -45,7 +50,10 @@ function ChatResponse({
                             handlePreBuildSuggestion={handlePreBuildSuggestion}
                         />
                     )}
-                    <ActionButton text={chat.text} />
+
+                    {!chat.hideActions && (
+                        <ActionButton text={chat.text} />
+                    )}
                 </>
             )}
         </>

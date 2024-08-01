@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import clsx from 'clsx';
@@ -25,6 +25,7 @@ import {
 
 import axiosInstance from "../../helpers/AxiosConfig";
 import ChatResponse from "./ChatResponse";
+import ImageUploader from "./ImageUploader";
 
 const commonPromptData = [
     {
@@ -56,13 +57,6 @@ function ChatScreen() {
     const [showWelcomePrompt, setShowWelcomePrompt] = useState(true);
     const [loading, setLoading] = useState(false);
     const bottomRef = useRef(null);
-
-    useEffect(() => {
-        // Scroll to the bottom whenever messages change
-        if (bottomRef.current) {
-            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [chatData]);
 
     const handleSendMessage = (input) => {
         const userInput = input || message
@@ -138,8 +132,6 @@ function ChatScreen() {
         }
     };
 
-    const handleDynamicSuggestion = () => { }
-
     const handlePreBuildSuggestion = (suggestion) => {
         setChatData((prev) => {
             prev.forEach(data => {
@@ -178,6 +170,7 @@ function ChatScreen() {
                         method: "post",
                         data: {
                             "includedTypes": suggestion.includedTypes,
+                            "excludedTypes": suggestion.excludedTypes,
                             "maxResultCount": 10,
                             "locationRestriction": {
                                 "circle": {
@@ -213,6 +206,7 @@ function ChatScreen() {
                                         text: text,
                                         type: CHAT_TYPE.SYSTEM,
                                         showSuggestion: true,
+                                        hideActions: true,
                                         placesData: places,
                                     }
                                 ]
@@ -254,6 +248,26 @@ function ChatScreen() {
             else {
                 toast.error("Geolocation is not supported by this browser, so we can't fetch nearby suggestion");
             }
+        }
+        else if (suggestion.type === SUGGESTION_TYPE.UPLOAD) {
+            const text = `Sure! Please upload markSheet photo of 10th, 12th or any graduation.`
+
+            setChatData((prev) => {
+                prev.forEach(data => {
+                    if (data.showSuggestion) {
+                        data.showSuggestion = false
+                    }
+                })
+
+                return [
+                    ...prev,
+                    {
+                        text: text,
+                        type: CHAT_TYPE.SYSTEM,
+                        showImageBox: true,
+                    }
+                ]
+            });
         }
     }
 
@@ -338,6 +352,7 @@ function ChatScreen() {
 
                 <div className="chat-input">
                     <div className="position-relative">
+                        <div></div>
                         <input
                             type="text"
                             name="chat"
@@ -358,6 +373,8 @@ function ChatScreen() {
                                     <img
                                         src={LoadingIcon}
                                         alt="Loading"
+                                        width={60}
+                                        height="auto"
                                     />
                                 )
                                 : (

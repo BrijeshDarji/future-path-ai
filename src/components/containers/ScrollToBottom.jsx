@@ -11,7 +11,7 @@ const ScrollTopTopWrapper = styled.div`
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  visibility: ${(props) => (props?.$visible ? "visible" : "hidden")};
+  display: ${(props) => (props?.$visible ? "block" : "none")};
   left: 50%;
   transform: translate(-50%, -50%);
 

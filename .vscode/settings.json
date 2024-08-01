@@ -5,7 +5,8 @@
         "readme",
         "chat",
         "welcome",
-        "netlify"
+        "netlify",
+        "marksheet"
     ],
     "cSpell.ignoreWords": [
         "NextGen",
