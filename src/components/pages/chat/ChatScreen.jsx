@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import clsx from 'clsx';
@@ -58,13 +58,6 @@ function ChatScreen() {
     const [loading, setLoading] = useState(false);
     const [showImageBox, setShowImageBox] = useState(false);
     const bottomRef = useRef(null);
-
-    useEffect(() => {
-        // Scroll to the bottom whenever messages change
-        if (bottomRef.current) {
-            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [chatData]);
 
     const handleSendMessage = (input) => {
         const userInput = input || message
