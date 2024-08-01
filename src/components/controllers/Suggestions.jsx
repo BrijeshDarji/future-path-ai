@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { motion } from "framer-motion";
 
 import { SUGGESTION_TYPE } from '../../assets/constants/Constant';
@@ -6,10 +5,11 @@ import { SuggestionsWrapper } from './Suggestions.style';
 
 const findMoreData = [
     {
-        title: 'Find nearby Secondary Schools',
+        title: 'Find nearby Higher Secondary Schools',
         type: SUGGESTION_TYPE.GOOGLE_MAP,
         includedTypes: ["secondary_school"],
-        plural: "Secondary Schools"
+        excludedTypes: ["preschool", "primary_school"],
+        plural: "Higher Secondary Schools"
     },
     {
         title: 'Find nearby Universities',
@@ -28,22 +28,6 @@ function Suggestions({
     handleDynamicSuggestion,
     handlePreBuildSuggestion,
 }) {
-    const data = document?.getElementById?.("max-outlet");
-
-    useEffect(() => {
-        const isScrollAvailable = window?.innerHeight < data?.clientHeight;
-
-        if (isScrollAvailable) {
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: "smooth",
-            });
-        }
-    }, [
-        window?.innerHeight,
-        data?.clientHeight,
-    ]);
-
     return (
         <SuggestionsWrapper>
             {list.length

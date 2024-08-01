@@ -50,7 +50,10 @@ function ChatResponse({
                             handlePreBuildSuggestion={handlePreBuildSuggestion}
                         />
                     )}
-                    <ActionButton text={chat.text} />
+
+                    {!chat.hideActions && (
+                        <ActionButton text={chat.text} />
+                    )}
                 </>
             )}
         </>

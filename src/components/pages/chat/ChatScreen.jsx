@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from "react"
+import { memo, useRef, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import clsx from 'clsx';
@@ -56,15 +56,7 @@ function ChatScreen() {
     const [message, setMessage] = useState('');
     const [showWelcomePrompt, setShowWelcomePrompt] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [showImageBox, setShowImageBox] = useState(false);
     const bottomRef = useRef(null);
-
-    useEffect(() => {
-        // Scroll to the bottom whenever messages change
-        if (bottomRef.current) {
-            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [chatData]);
 
     const handleSendMessage = (input) => {
         const userInput = input || message
@@ -178,6 +170,7 @@ function ChatScreen() {
                         method: "post",
                         data: {
                             "includedTypes": suggestion.includedTypes,
+                            "excludedTypes": suggestion.excludedTypes,
                             "maxResultCount": 10,
                             "locationRestriction": {
                                 "circle": {
@@ -213,6 +206,7 @@ function ChatScreen() {
                                         text: text,
                                         type: CHAT_TYPE.SYSTEM,
                                         showSuggestion: true,
+                                        hideActions: true,
                                         placesData: places,
                                     }
                                 ]
@@ -379,6 +373,8 @@ function ChatScreen() {
                                     <img
                                         src={LoadingIcon}
                                         alt="Loading"
+                                        width={60}
+                                        height="auto"
                                     />
                                 )
                                 : (
